@@ -146,7 +146,7 @@ VITE_API_URL=https://seswa-backend.onrender.com
 ```env
 NODE_ENV=production
 PORT=5000
-MONGODB_URI=mongodb+srv://seswa2003:Seswa%40123@cluster0.z4t8igs.mongodb.net/seswa?retryWrites=true&w=majority&appName=Cluster0
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/<dbname>?retryWrites=true&w=majority&appName=Cluster0
 JWT_SECRET=your_production_jwt_secret
 FRONTEND_URL=https://santal-welfare-association-s6yt.vercel.app
 EMAIL_HOST=smtp.gmail.com
