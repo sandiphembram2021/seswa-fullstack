@@ -1,280 +1,216 @@
-# SESWA Full Stack Deployment Guide
-
-## 📁 Project Structure
-```
+🚀 SESWA Full Stack Deployment Guide
+📁 Project Structure
+java
+Copy
+Edit
 seswa/
 ├── frontend/          ← React frontend (Vite)
-├── server/           ← Node.js backend (Express)
-├── package.json      ← Root package.json for deployment
-└── DEPLOYMENT.md     ← This file
-```
+├── server/            ← Node.js backend (Express)
+├── package.json       ← Root deployment file (optional)
+└── README.md          ← This file
+🌍 Deployment Options
+✅ Option 1: Deploy with Render (Backend) + Vercel (Frontend)
+🔧 Step 1: Prepare for Deployment
+Push your full project (frontend + backend) to GitHub
 
-## 🚀 Deployment Options
+Add a .env file in the server/ directory
 
-### Option 1: Render (Recommended)
+Update FRONTEND_URL in server/.env to your deployed frontend URL
 
-#### Step 1: Prepare for Deployment
-1. Ensure your code is pushed to GitHub
-2. Make sure `server/.env` has production values
-3. Update `FRONTEND_URL` in server/.env to your deployed frontend URL
+Add a .env.example to show required environment variables (see below)
 
-#### Step 2: Deploy Backend on Render
-1. Go to [Render.com](https://render.com) and sign up/login
-2. Click "New +" → "Web Service"
-3. Connect your GitHub repository
-4. Configure:
-   - **Name**: `seswa-backend`
-   - **Environment**: `Node`
-   - **Build Command**: `cd server && npm install`
-   - **Start Command**: `cd server && npm start`
-   - **Root Directory**: Leave empty (uses root)
+🌐 Step 2: Deploy Backend on Render
+Login or signup at Render
 
-#### Step 3: Set Environment Variables on Render
-Add these environment variables in Render dashboard:
-```
-MONGODB_URI=mongodb+srv://seswa2003:Seswa@123@cluster0.z4t8igs.mongodb.net/seswa-db?retryWrites=true&w=majority
+Click New + → Web Service
+
+Connect your GitHub repository
+
+Configure deployment:
+
+Key	Value
+Name	seswa-backend
+Environment	Node
+Build Command	cd server && npm install
+Start Command	cd server && npm start
+Root Directory	(leave blank)
+
+🔑 Step 3: Add Environment Variables on Render
+Go to your Render dashboard → your service → Environment → Add:
+
+env
+Copy
+Edit
 NODE_ENV=production
-JWT_SECRET=seswa-super-secret-jwt-key-2024-production
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/<dbname>?retryWrites=true&w=majority
+JWT_SECRET=your_jwt_secret
 JWT_EXPIRE=7d
+
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
-EMAIL_USER=seswawb@gmail.com
-EMAIL_PASS=your-app-password-here
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_email_app_password
 EMAIL_FROM=noreply@seswa.org
-FRONTEND_URL=https://santal-welfare-association-s6yt.vercel.app
-ADMIN_EMAIL=seswawb@gmail.com
-ADMIN_PASSWORD=admin123
-```
 
-#### Step 4: Deploy Frontend on Vercel (Already Done)
-Your frontend is already deployed at:
-`https://santal-welfare-association-s6yt.vercel.app`
+FRONTEND_URL=https://your-frontend.vercel.app
+ADMIN_EMAIL=admin@seswa.org
+ADMIN_PASSWORD=your_admin_password
 
-#### Step 5: Update Frontend API Base URL
-In your frontend, update the API base URL to point to your Render backend:
-```javascript
-// In frontend/src/config/api.js or similar
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://your-render-app.onrender.com/api'
-  : 'http://localhost:5000/api';
-```
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+⚠️ Never use real passwords inside code or public files!
 
-### Option 2: Heroku
+🌐 Step 4: Deploy Frontend on Vercel
+Connect your frontend/ folder to Vercel
 
-#### Step 1: Install Heroku CLI
-```bash
-npm install -g heroku
-heroku login
-```
+Set environment variables:
 
-#### Step 2: Create Heroku App
-```bash
-heroku create seswa-fullstack
-```
+env
+Copy
+Edit
+VITE_API_URL=https://your-backend.onrender.com/api
+VITE_NODE_ENV=production
+Deploy the project
 
-#### Step 3: Set Environment Variables
-```bash
-heroku config:set MONGODB_URI="mongodb+srv://seswa2003:Seswa@123@cluster0.z4t8igs.mongodb.net/seswa-db?retryWrites=true&w=majority"
-heroku config:set NODE_ENV=production
-heroku config:set JWT_SECRET=seswa-super-secret-jwt-key-2024-production
-heroku config:set FRONTEND_URL=https://santal-welfare-association-s6yt.vercel.app
-# Add other environment variables...
-```
+Your app will be live at:
+https://your-frontend.vercel.app
 
-#### Step 4: Deploy
-```bash
-git add .
-git commit -m "Deploy to Heroku"
-git push heroku main
-```
+🧪 Environment Variables Overview
+🔐 Backend (server/.env)
+env
+Copy
+Edit
+NODE_ENV=production
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/<dbname>
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRE=7d
 
-### Option 3: VPS (DigitalOcean, AWS, etc.)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_email_app_password
+EMAIL_FROM=noreply@seswa.org
 
-#### Step 1: Server Setup
-```bash
-# Install Node.js
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt-get install -y nodejs
+FRONTEND_URL=https://your-frontend.vercel.app
+ADMIN_EMAIL=admin@seswa.org
+ADMIN_PASSWORD=your_admin_password
+⚙️ Frontend (frontend/.env)
+env
+Copy
+Edit
+VITE_API_URL=https://your-backend.onrender.com/api
+VITE_NODE_ENV=production
+💻 Local Development
+✅ Requirements
+Node.js v16+
 
-# Install PM2 for process management
-sudo npm install -g pm2
+MongoDB (local or Atlas)
 
-# Install Nginx for reverse proxy
-sudo apt update
-sudo apt install nginx
-```
+Git
 
-#### Step 2: Clone and Setup
-```bash
-git clone https://github.com/your-username/seswa.git
-cd seswa
-npm run install:all
-npm run build
-```
-
-#### Step 3: Configure PM2
-Create `ecosystem.config.js`:
-```javascript
-module.exports = {
-  apps: [{
-    name: 'seswa-backend',
-    script: 'server/server.js',
-    instances: 'max',
-    exec_mode: 'cluster',
-    env: {
-      NODE_ENV: 'production',
-      PORT: 5000
-    }
-  }]
-};
-```
-
-Start with PM2:
-```bash
-pm2 start ecosystem.config.js
-pm2 save
-pm2 startup
-```
-
-#### Step 4: Configure Nginx
-Create `/etc/nginx/sites-available/seswa`:
-```nginx
-server {
-    listen 80;
-    server_name your-domain.com;
-
-    # Serve React build files
-    location / {
-        root /path/to/seswa/frontend/dist;
-        try_files $uri $uri/ /index.html;
-    }
-
-    # Proxy API requests to backend
-    location /api {
-        proxy_pass http://localhost:5000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-```
-
-Enable site:
-```bash
-sudo ln -s /etc/nginx/sites-available/seswa /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl restart nginx
-```
-
-## 🔧 Local Development
-
-### Prerequisites
-- Node.js 16+
-- MongoDB (local or Atlas)
-- Git
-
-### Setup
-```bash
-# Clone repository
+🔄 Setup Steps
+bash
+Copy
+Edit
+# Clone the project
 git clone https://github.com/your-username/seswa.git
 cd seswa
 
 # Install all dependencies
 npm run install:all
 
-# Set up environment variables
+# Copy environment file
 cp server/.env.example server/.env
-# Edit server/.env with your values
+# Edit with real values
 
-# Start development servers
+# Start servers
 npm run dev
-```
-
 This will start:
-- Frontend: http://localhost:5173
-- Backend: http://localhost:5000
 
-## 📝 Environment Variables
+🌐 Frontend: http://localhost:5173
 
-### Required Variables
-```env
-MONGODB_URI=your-mongodb-connection-string
-JWT_SECRET=your-jwt-secret-key
-NODE_ENV=production
-```
+🖥️ Backend: http://localhost:5000
 
-### Optional Variables
-```env
+📝 .env.example Template
+Create a file server/.env.example:
+
+env
+Copy
+Edit
+NODE_ENV=development
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/<dbname>
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRE=7d
+
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password
-FRONTEND_URL=your-frontend-url
-ADMIN_EMAIL=admin@seswa.org
-```
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_email_app_password
+EMAIL_FROM=noreply@seswa.org
 
-## 🔍 Testing Deployment
+FRONTEND_URL=http://localhost:5173
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=admin123
+🔍 Testing Deployment
+✅ Backend Health Check
+bash
+Copy
+Edit
+curl https://your-backend.onrender.com/api/health
+✅ Frontend Test
+Visit: https://your-frontend.vercel.app
 
-### Backend Health Check
-```bash
-curl https://your-backend-url.com/api/health
-```
+Test:
 
-### Frontend Check
-Visit your frontend URL and verify:
-- ✅ Pages load correctly
-- ✅ Contact form works
-- ✅ API calls succeed
-- ✅ No console errors
+✅ Page loads
 
-## 🐛 Troubleshooting
+✅ API data loads (inspect Network tab)
 
-### Common Issues
+✅ Contact form works (if implemented)
 
-1. **CORS Errors**
-   - Ensure `FRONTEND_URL` is set correctly in backend
-   - Check CORS configuration in `server/server.js`
+🛠 Troubleshooting
+Problem	Fix
+CORS error	Ensure correct FRONTEND_URL is set in backend .env
+API 500 error	Check backend logs on Render
+MongoDB not connecting	Check URI and IP whitelist in MongoDB Atlas
+Email not sending	Use app-password for Gmail (not main password)
 
-2. **Database Connection**
-   - Verify MongoDB URI is correct
-   - Check network access in MongoDB Atlas
+📦 Optional: Heroku Deployment
+(Not recommended now due to Heroku free tier removal, but still usable if needed.)
 
-3. **Build Failures**
-   - Ensure Node.js version compatibility
-   - Check for missing dependencies
+heroku create seswa-fullstack
 
-4. **API Not Working**
-   - Verify backend is running
-   - Check environment variables
-   - Review server logs
+heroku config:set VAR_NAME=value
 
-### Logs
-```bash
-# Heroku logs
-heroku logs --tail
+git push heroku main
 
-# PM2 logs
-pm2 logs
+📈 VPS Deployment (Optional for Production)
+Use PM2 + NGINX + Ubuntu server (DigitalOcean, AWS, etc.).
+Let me know if you want a full VPS guide — I’ll generate one step-by-step.
 
-# Render logs
-Check Render dashboard
-```
+📬 Contact / Support
+📧 Email: sandiphembram2021@gmail,com
+📂 GitHub: github.com/sandiphembram2021/seswa
 
-## 📞 Support
+✅ Success Checklist
+ Frontend deployed on Vercel
 
-For deployment issues, contact:
-- Email: seswawb@gmail.com
-- Create an issue on GitHub repository
+ Backend deployed on Render
 
-## 🔄 Updates
+ Environment variables securely managed
 
-To update the deployed application:
+ API connection works in production
 
-1. **Render**: Push to GitHub (auto-deploys)
-2. **Heroku**: `git push heroku main`
-3. **VPS**: `git pull && npm run build && pm2 restart all`
+ GitHub repo clean (no secrets pushed)
+
+🎉 Congratulations! Your full-stack SESWA app is now deployment-ready and secure.
+
+Let me know if you want:
+
+A render.yaml template
+
+A .env.example auto generator
+
+Or CI/CD setup with GitHub Actions
+
+Just say the word. 💻🔥
