@@ -49,17 +49,22 @@ Add these in Render dashboard:
 
 ```env
 NODE_ENV=production
-MONGODB_URI=mongodb+srv://seswa2003:seswa2003@cluster0.z4t8igs.mongodb.net/seswa-db?retryWrites=true&w=majority&appName=Cluster0
-JWT_SECRET=seswa-super-secret-jwt-key-2024-production
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/<dbname>
+JWT_SECRET=YOUR_JWT_SECRET
 JWT_EXPIRE=7d
+
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
-EMAIL_USER=seswawb@gmail.com
+EMAIL_USER=your@email.com
 EMAIL_FROM=noreply@seswa.org
+
 FRONTEND_URL=https://santal-welfare-association-s6yt.vercel.app
-ADMIN_EMAIL=seswawb@gmail.com
+
+ADMIN_EMAIL=your@email.com
+
 RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX_REQUESTS=100
+
 ```
 
 #### 1.4 Deploy
