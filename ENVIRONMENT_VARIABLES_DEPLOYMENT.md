@@ -127,7 +127,7 @@ VITE_NODE_ENV=development
 ```env
 NODE_ENV=development
 FRONTEND_URL=http://localhost:5173
-MONGODB_URI=mongodb+srv://seswa2003:seswa2003@cluster0.z4t8igs.mongodb.net/seswa-db?retryWrites=true&w=majority&appName=Cluster0
+MONGODB_URI=mongodb+srv://seswa2003:seswa2003@cluster0...
 ```
 
 ## 🐛 Troubleshooting
